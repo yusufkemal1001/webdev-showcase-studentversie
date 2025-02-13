@@ -15,6 +15,7 @@ namespace Showcase_Contactpagina.Models
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+        
 
         [Required]
         [Phone]
