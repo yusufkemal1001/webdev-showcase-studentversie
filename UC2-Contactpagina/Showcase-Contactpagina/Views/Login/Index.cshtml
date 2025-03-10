@@ -1,0 +1,36 @@
+@model User
+@{
+    ViewData["Title"] = "Contactpagina";
+}
+
+<div class="page">
+    <section class="contact">
+
+        <h1>Inloggsen</h1>
+        <p>@ViewBag.Message</p>s
+        @if (TempData["message"] != null)
+        {
+            <p class="alert alert-success">@TempData["message"]</p>
+        }
+        <form method="post" class="form-contactpagina">
+            
+            <div class="form-contactpagina__inputelement fx-col">
+                <label for="email">E-mailadres: </label>
+                <input type="email" asp-for="Email" name="email" id="email">
+            </div>
+
+            <div class="form-contactpagina__inputelement fx-col">
+                <label for="phone">Wachtwoord: </label>
+                <input type="tel" asp-for="Password" name="phone" id="phone" required>
+            </div>
+
+            <div class="g-recaptcha" data-sitekey="6LdsMuEqAAAAANuY1M3PysgX-FxPgGy8sRUOmIeD"></div>
+            <div class="form-contactpagina__inputelement" style="display: flex; justify-content: space-between;">
+                <input type="reset" value="Reset"/>
+                <input type="submit" value="Verstuur!">
+            </div>
+
+        </form>
+
+    </section>
+</div>
