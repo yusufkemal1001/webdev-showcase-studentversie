@@ -20,6 +20,10 @@ ViewData["Title"] = "Contactpagina";
 
                 <h1>Contact</h1>
                 <p>@ViewBag.Message</p>
+                @if (TempData["message"] != null)
+                {
+                <p class="alert alert-success">@TempData["message"]</p>
+                }
                 <form method="post" class="form-contactpagina">
 
                     <div class="form-contactpagina__inputelement fx-col">
@@ -41,6 +45,8 @@ ViewData["Title"] = "Contactpagina";
                         <label for="phone">Telefoonnummer: </label>
                         <input type="tel" asp-for="Phone" name="phone" id="phone" required>
                     </div>
+
+                    <div class="g-recaptcha" data-sitekey="6LdsMuEqAAAAANuY1M3PysgX-FxPgGy8sRUOmIeD"></div>
                     <div class="form-contactpagina__inputelement" style="display: flex; justify-content: space-between;">
                         <input type="reset" value="Reset"/>
                         <input type="submit" value="Verstuur!">
@@ -51,11 +57,11 @@ ViewData["Title"] = "Contactpagina";
             </section>
         </div>
 
-
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script>
             const inputEmail = document.getElementById('email');
-
-            const validateEmail = () => {
+            
+            @*const validateEmail = () => {
                 if (inputEmail.validity.typeMismatch) {
                     inputEmail.setCustomValidity("Voer een geldig e-mailadres in!");
                     inputEmail.reportValidity();
@@ -64,7 +70,7 @@ ViewData["Title"] = "Contactpagina";
                 } else {
                     inputEmail.setCustomValidity("");
                 }
-            }
+            }*@
 
             const validateForm = () => {
                 validateEmail();
@@ -78,50 +84,50 @@ ViewData["Title"] = "Contactpagina";
             // Selecteer het formelement
             const form = document.querySelector('.form-contactpagina');
 
-            // Event listener voor formulierinzending
-            form.addEventListener('submit', function (event) {
-                event.preventDefault(); // Voorkom standaard formulierinzending
 
-                // Valideer alle velden voor de zekerheid
+
+            // Event listener for form submission
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); // Always prevent default first
+
+                // Validate all fields
                 validateForm();
 
-                // Verkrijg CSRF-token van het formulier
+                // Get CSRF token from the form
                 const csrfToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-                // Serialiseer formuliergegevens
+                // Serialize form data
                 const formData = new URLSearchParams();
-
                 formData.append('email', form.email.value);
+                formData.append('__RequestVerificationToken', csrfToken); // Add CSRF token
 
-                formData.append('__RequestVerificationToken', csrfToken); // Voeg CSRF-token toe
-
-                // Voer een POST-verzoek uit
+                // Perform POST request
                 fetch('/contact', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded' // Stel de inhoudstype in
+                        'Content-Type': 'application/x-www-form-urlencoded' // Set content type
                     },
-                    body: formData // Stuur de geserialiseerde formuliergegevens als de body
+                    body: formData // Send serialized form data as the body
                 })
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error('Netwerkrespons was niet ok');
+                            throw new Error('Network response was not ok');
                         }
                         return response.text();
                     })
                     .then(data => {
-                        // Verwerk succesvolle formulierinzending
-                        console.log('Formulier succesvol ingediend:', data);
-                        // Optioneel: je kunt hier een redirect uitvoeren of een succesbericht tonen
+                        // Handle successful form submission
+                        console.log('Form successfully submitted:', data);
+                        form.reset(); // Reset form after successful submission
+                        // Optionally: You can redirect or show a success message here
                     })
                     .catch(error => {
-                        console.error('Er was een probleem met de formulierinzending:', error);
-
+                        console.error('There was a problem with the form submission:', error);
                         alert(error.message);
-
-                        // Verwerk fouten hier
                     });
             });
+
+
         </script>
 
 

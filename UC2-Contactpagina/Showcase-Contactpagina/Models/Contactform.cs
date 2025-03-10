@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Showcase_Contactpagina.Models
 {
@@ -20,5 +22,11 @@ namespace Showcase_Contactpagina.Models
         [Required]
         [Phone]
         public string Phone { get; set; }
+        
+        [Required]
+        [FromForm(Name = "g-recaptcha-response")]
+        [StringLength(5000)]
+        public string Captcha { get; set; }
+            
     }
 }
